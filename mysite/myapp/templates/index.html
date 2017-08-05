@@ -3,40 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <title>Instagram Clone</title>
+    <link href="https://fonts.googleapis.com/css?family=Passion+one" rel="stylesheet">
+
+    <style>
+    body{
+        text-align:center;
+        overflow:hidden;
+        margin:0px;
+        height:100%;
+        background: #f09433;
+        background: -moz-linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        background: -webkit-linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+        background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f09433', endColorstr='#bc1888',GradientType=1 );
+        font-family: 'Passion One', cursive;
+        font-size:18px;
+    }
+    input{
+    width:300px;
+    display:block;
+    height:40px;
+    border-radius:8px;
+    }
+    a{
+    font-size:20px;
+    }
+    .button {
+  display: inline-block;
+  border-radius: 4px;
+  background-color: #f4511e;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 28px;
+  padding: 20px;
+  width: 200px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.button span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.button:hover span {
+  padding-right: 25px;
+}
+
+.button:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+
+
+
+    </style>
 </head>
+
 <body>
  <div class="main">
      <h1> Instagram Clone</h1>
      <h3>Sign Up</h3>
  </div>
+ <center>
  <div>
      <form method="post">
          {% csrf_token %}
 
          <div>
-                <label for="username">Username: </label>
+                <label for="username">Username </label>
                 <input id="username" type="text" name="username" value={{ username }}>
          </div>
-         <div>
-                <label for="name">Name: </label>
+         <div class="label1">
+                <label for="name">Name</label>
                 <input id="name" type="text" name="name" value={{ name }}>
          </div>
-
          <div>
-                <label for="email">Email: </label>
+                <label for="email">Email-id </label>
                 <input id="email" type="text" name="email" value={{ email }}>
          </div>
-
          <div>
-                <label for="password">Password: </label>
+                <label for="password">Password </label>
                 <input id="password" type="password" name="password" value={{ password }}>
          </div>
-                <input type="submit" value="Sign Up">
+
+         <button class="button" style="vertical-align:middle"><span>Signup </span></button>
      </form>
 
 
  </div>
- <br>
+ </center>
  <br>
 
     <div><h3>Already a user?</h3><a href="login/">Login</a> </div>

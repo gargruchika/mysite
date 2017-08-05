@@ -13,19 +13,23 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-#import files
 from django.conf.urls import url
 from django.conf import settings
 from django.contrib import admin
 from django.conf.urls.static import static
-from myapp.views import signup_view, feed_view ,login_view
+from myapp.views import signup_view, feed_view ,login_view,post_view,like_view,comment_view,logout_view,upvoting_view
 
-# different urls for different pages.
+
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),       #url for  admin page.
-    url('feed/', feed_view),                #url for feed page.
-    url('login/', login_view),              #url for directly login the page if the user has already signup.
-    url('',signup_view)                     #url for new signup if the new user wants to create an account.
+    url(r'^admin/', admin.site.urls),
+    url('logout/',logout_view),
+    url('upvoting/',upvoting_view),
+    url('post/', post_view),
+    url('feed/', feed_view),
+    url('like/', like_view),
+    url('comment/', comment_view),
+    url('login/', login_view),
+    url('',signup_view)
 
 
 ]

@@ -21,6 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '4l)$lz%(1$c3tn-0snbi#g87vb7*eucy8cbt@=uohsuf2=yt-!'
+SENDGRID_API_KEY='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'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -77,7 +78,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ruchi',
+        'NAME': 'ruchika',
         'USER':'root',
         'PASSWORD':'ruchika',
     }

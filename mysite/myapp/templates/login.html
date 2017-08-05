@@ -1,28 +1,60 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link href="https://fonts.googleapis.com/css?family=Passion+one" rel="stylesheet">
+    <style>
+        body{
+        text-align:center;
+        padding-top:60px;
+        font-family: 'Passion One', cursive;
+        font-size:25px;
+        background:aliceblue
+        }
+        input{
+    width:300px;
+    display:block;
+    height:40px;
+    border-radius:8px;
+    }
+    .button {
+    background-color: mediumslateblue;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    }
+    .button2 {width: 34%;}
+    </style>
 </head>
 <body>
 <div class="main">
      <h1> Login</h1>
  </div>
+<center>
   <form method="post">
       {% csrf_token %}
-      <div>
+  <div>
           <label for="username">Username: </label>
           <input id="username" type="text" name="username" value={{ username }}>
       </div>
+      <br>
 
       <div>
           <label for="password">Password: </label>
           <input id="password" type="password" name="password" value={{ password }}>
       </div>
+      <br><br>
 
-      <input type="submit" value="Log In">
+      <button class="button button2">LOGIN</button><br>
 
-    </form>
+  </form>
+</center>
 </body>
 </html>
