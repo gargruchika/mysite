@@ -1,33 +1,29 @@
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>feed</title>
+    <title>title</title>
     <link href="https://fonts.googleapis.com/css?family=Passion+one" rel="stylesheet">
     <style>
-        body{
-        font-family: 'Passion One', cursive;
-        text-align:center;
-        }
-        body h2 {
-        font-size:30px;
-        text-align:center;
-        }
-        .button {
-  padding:15px 25px;
+.button {
+  margin-top:40px;
+  display: inline-block;
+  padding: 15px 25px;
   font-size: 24px;
   cursor: pointer;
   text-align: center;
   text-decoration: none;
   outline: none;
   color: #fff;
-  background-color: #517fa4;
+  background-color:#517fa4;
   border: none;
   border-radius: 15px;
   box-shadow: 0 9px #999;
 }
 
-.button:hover {background-color: #517fa4;}
+.button:hover {background-color: #517fa4}
 
 .button:active {
   background-color: #517fa4;
@@ -35,19 +31,25 @@
   transform: translateY(4px);
 }
 
-    </style>
+   body{
+   text-align:center;
+   font-family: 'Passion One', cursive;
+   }
+   h1{
+   font-size:40px;
+   }
+</style>
 </head>
-<body>
-<div>
-    <h2>INSTAGRAM CLONE </h2><hr><br>
+    <h1>INSTAGRAM CLONE</h1>
+    <h2>Sell anything online here</h2>
+    <p>Find here everything that you need for an online store </p>
     <form method="post" action="/post/">
         {% csrf_token %}
         <button class="button">Create Post</button>
-    </form><br>
-
-    </div><br>
+    </form><br><br>
 
 
+<body>
     {%for post in posts%}
         <h3> Posted by: {{ post.user.username }} </h3>
         <p>[{{ post.created_on }}]</p>
@@ -85,9 +87,9 @@
             {% endfor %}
         </div>
     {% endfor %}
+    <br>
 <form action="/logout/" method="get">
-            <button class="button">LogOut</button>
-</form></body>
-
-
+            <button class="button">Log Out</button>
+    </form>
+</body>
 </html>

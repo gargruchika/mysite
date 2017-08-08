@@ -39,12 +39,12 @@ def signup_view(request):
               content = Content("text/plain", "welcome to instaclone! enjoy your app")
               mail = Mail(from_email, subject, to_email, content)
               response = sg.client.mail.send.post(request_body=mail.get())
-              return redirect('/login/')
               if response.status_code == 202:
                message = "Email Send! :)"
+               return render(request,'success.html',{'response':message})
               else:
                 message = "Unable to send Email! :("
-                return render(request, 'success.html', {'response': message})
+                return render(request, 'index.html', {'response': message})
             else:
                 text ={}
                 text = 'user name and password in not long enough!'
