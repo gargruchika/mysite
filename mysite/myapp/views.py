@@ -17,7 +17,7 @@ from django.contrib.auth.hashers import make_password,check_password
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CLIENT_ID =  '54ceade8d449315'
 CLIENT_SECRET = 'a2f439835e340c444f786a6c99fef14bded5e177'
-SENDGRID_API_KEY='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'
+
 # Create your views here.
 def signup_view(request):
     if request.method == "POST":
