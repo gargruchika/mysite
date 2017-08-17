@@ -1,24 +1,25 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <title>Instagram Clone</title>
     <link href="https://fonts.googleapis.com/css?family=Passion+one" rel="stylesheet">
 
     <style>
     body{
-        text-align:center;
-        overflow:hidden;
-        margin:0px;
-        height:100%;
-        background: #f09433;
-        background: -moz-linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-        background: -webkit-linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
-        background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
-        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f09433', endColorstr='#bc1888',GradientType=1 );
+
+
         font-family: 'Passion One', cursive;
         font-size:18px;
+        overflow-x:hidden;
+
     }
+
     input{
     width:300px;
     display:block;
@@ -67,18 +68,79 @@
   opacity: 1;
   right: 0;
 }
+a{
+float:right;
+margin-top:-60px;
+margin-right:40px;
+font-size:40px;
+}
+#header{
+text-align: center;
+  background-image:url('{% static "im3.jpeg"%}');
+  margin-top: -19px;
+  margin-right:-10px;
+  margin-left:-10px;
+  background-size: cover;
+  }
+  #part{
+  background-image:url('{% static "im1.jpeg"%}');
+  margin-right:-10px;
+  background-repeat:no-repeat;
+  margin-left:-10px;
+  margin-bottom:-40px;
+  }
+#content  h2{
+font-size:30px;
+}
+MESSAGE_TAGS={messages.ERROR:'danger'}
+#last{
+  background-color:white;
+  text-align: center;
+  height:150px;
+  width:1400px;
 
-
+}
 
     </style>
 </head>
 
 <body>
  <div class="main">
-     <h1> Instagram Clone</h1>
-     <h3>Sign Up</h3>
+     <section id="nav">
+     <h1>Instagram Clone</h1><a href="login/">Login</a><hr>
+     </section>
+     <center>
+         <section id="header">
+     <h2>Smart P2P Marketplace</h2>
+
+             <h4>This is a fully hosted ecommerce website solution that will help you sell online. It only takes a few minutes to open a store and start selling to customers around the world.Register your account an start selling.</h4>
+         <img src="http://i.imgur.com/eHTkKHd.jpg"  />
+         </section></center>
+
  </div>
+ <section id ="content">
+     <center>
+       <h1>We're here to help, 24 hours a day, 7 days a week</h1>
+         <img src ="http://i.imgur.com/dUuESgU.jpg"/><hr>
+         <h2>India’s Fastest Growing Ecommerce Solution</h2>
+          <h3>40 payment providers including PayU and COD.<br>
+             Pay for premium plans in Rupees.<br>
+             Sell internationally.<br>
+             Mobile optimized store.<br>
+             .in domain support.<br>
+             Free starter site.</h3>
+     </center>
+
+
+ </section>
  <center>
+     <section id ='part'>
+         <h1>Sign Up</h1>
+         {% for message in messages %}
+         <div class="alert alert-{{ message.tags }}">
+             {{ message }}
+         </div><br>
+         {% endfor %}
  <div>
      <form method="post">
          {% csrf_token %}
@@ -102,13 +164,24 @@
 
          <button class="button" style="vertical-align:middle"><span>Signup </span></button>
      </form>
-
+     <h2>Already a user go to Login above!</h2><br>
 
  </div>
- </center>
- <br>
+     </section>
+ </center><br><br>
 
-    <div><h3>Already a user?</h3><a href="login/">Login</a> </div>
+        <section id="last">
+          <footer>
+                 <h3>Contact with us</h3>
+              <img src="http://i.imgur.com/aAcSKBI.jpg"/>
+
+
+
+          </footer>
+
+        </section>
+
+
 
 </body>
 </html>

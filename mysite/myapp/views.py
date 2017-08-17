@@ -3,20 +3,23 @@
 from __future__ import unicode_literals
 from django.shortcuts import render,redirect
 from django.shortcuts import render_to_response
-from forms import SignUpForm,LoginForm,PostForm,LikeForm,CommentForm,UpvotingForm
-from models import UserModel , SessionToken , PostModel ,login, LikeModel,CommentModel,UpvotingModel
+from forms import SignUpForm,LoginForm,PostForm,LikeForm,CommentForm,UpvoteForm,SearchForm
+from models import UserModel , SessionToken , PostModel ,login, LikeModel,CommentModel
 from imgurpython import ImgurClient
-from django.http import HttpResponse
+from django.http import HttpResponse,HttpResponseForbidden
 from datetime import timedelta,datetime
 from django.utils import timezone
+from django.db import IntegrityError
 from django.contrib.auth import logout
 import os
 import sendgrid
 from sendgrid.helpers.mail import *
+from django.contrib import messages
 from django.contrib.auth.hashers import make_password,check_password
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CLIENT_ID =  '54ceade8d449315'
 CLIENT_SECRET = 'a2f439835e340c444f786a6c99fef14bded5e177'
+
 
 # Create your views here.
 def signup_view(request):
@@ -36,25 +39,24 @@ def signup_view(request):
               from_email = Email("ruchikagarg764@example.com.")
               to_email = Email(email)
               subject = "Successfully signed up."
-              content = Content("text/plain", "welcome to instaclone! enjoy your app")
+              content = Content("text/plain", "welcome to smart p2p marketplace! enjoy your app")
               mail = Mail(from_email, subject, to_email, content)
               response = sg.client.mail.send.post(request_body=mail.get())
               if response.status_code == 202:
-               message = "Email Send! :)"
-               return render(request,'success.html',{'response':message})
+                  messages.warning(request, "Email Send :)")
+                  return render(request,'success.html')
               else:
-                message = "Unable to send Email! :("
-                return render(request, 'index.html', {'response': message})
+                messages.warning(request, "Unable to send Email! :(")
+                return render(request, 'index.html')
             else:
-                text ={}
-                text = 'user name and password in not long enough!'
-                return render(request,'index.html',{'text':text})
+                messages.warning(request,'user name and password in not long enough!')
+                return render(request,'index.html')
         else:
+             messages.warning(request,"please fill all the fields correctly!")
              form = SignUpForm()
-    elif request.method == "GET":
+    else:
         form = SignUpForm()
-        today = datetime.now()
-        return render(request, 'index.html', {'today': today, 'form': form})
+    return render(request, 'index.html', {'time': datetime.now(),},{'form': form})
 
 #for login the page
 def login_view(request):
@@ -74,7 +76,7 @@ def login_view(request):
                     response.set_cookie(key='session_token', value=token.session_token)
                     return response
                 else:
-                    response_data['message'] = 'Incorrect Password! Please try again!'
+                    messages.warning(request, "Incorrect Password! Please try agaim!")
     elif request.method == "GET":
         form = LoginForm()
     response_data['form'] = form
@@ -97,11 +99,12 @@ def post_view(request):
                 client = ImgurClient(CLIENT_ID,CLIENT_SECRET)
                 post.image_url = client.upload_from_path(path,anon=True)['link']
                 post.save()
-
                 return redirect('/feed/')
+
 
         else:
             form = PostForm()
+            messages.warning(request, "Post should not be created successfully.")
         return render(request, 'post.html', {'form' : form})
     else:
         return redirect('/login/')
@@ -117,6 +120,7 @@ def feed_view(request):
             existing_like=LikeModel.objects.filter(post_id=post.id,user=user).first()
             if existing_like:
                 post.has_liked = True
+            messages.warning(request, "Post should be created successfully.")
         return render(request,'feed.html',{'posts':posts})
     else:
         return redirect('/login/')
@@ -130,6 +134,18 @@ def like_view(request):
             existing_like =LikeModel.objects.filter(post_id=post_id,user=user).first()
             if not existing_like:
                 LikeModel.objects.create(post_id=post_id,user=user)
+                messages.warning(request, "Like should be created successfully.")
+                postget=PostModel.objects.filter(id=post_id).first()
+                userid=postget.user_id
+                user=UserModel.objects.filter(id=userid).first()
+                email=user.email
+                sg = sendgrid.SendGridAPIClient(apikey=SENDGRID_API_KEY)
+                from_email = Email("ruchikagarg764@example.com.")
+                to_email = Email(email)
+                subject = "someone liked your post!"
+                content = Content("text/plain", "post should be liked")
+                mail = Mail(from_email, subject, to_email, content)
+                response = sg.client.mail.send.post(request_body=mail.get())
             else:
                 existing_like.delete()
             return redirect ('/feed/')
@@ -145,6 +161,18 @@ def comment_view(request):
             comment_text = form.cleaned_data.get('comment_text')
             comment = CommentModel.objects.create(user=user,post_id=post_id,comment_text=comment_text)
             comment.save()
+            messages.warning(request, "comment should be created successfully.")
+            postget = PostModel.objects.filter(id=post_id).first()
+            userid = postget.user_id
+            user = UserModel.objects.filter(id=userid).first()
+            email = user.email
+            sg = sendgrid.SendGridAPIClient(apikey=SENDGRID_API_KEY)
+            from_email = Email("ruchikagarg764@example.com.")
+            to_email = Email(email)
+            subject = "someone should comment on your post!"
+            content = Content("text/plain", "comment should be posted by someone")
+            mail = Mail(from_email, subject, to_email, content)
+            response = sg.client.mail.send.post(request_body=mail.get())
             return redirect('/feed/')
         else:
             return redirect('/feed/')
@@ -164,28 +192,58 @@ def check_validation(request):
         return None
 
 def logout_view(request):
-     return render(request,'logout.html')
-
-def upvoting_view(request):
     user = check_validation(request)
+    if user is not None:
+        new_session = SessionToken.objects.filter(user=user).last()
+        if new_session:
+            new_session.delete()
+    return render(request,'logout.html')
+
+def upvote_view(request):
+    user = check_validation(request)
+    comment =None
+    print"upvote view"
     if user and request.method == 'POST':
-
-        form = UpvotingForm(request.POST)
+        form = UpvoteForm(request.POST)
         if form.is_valid():
-            response_data = {}
-            comment_id = form.cleaned_data.get('comment')
-            upvoted = UpvotingModel.objects.filter(comment_id=comment_id,user=user).first()
-
-            if not upvoted:
-                UpvotingModel.objects.create(comment=comment_id,user=user)
-                response_data['subject']='upvoted'
-                response_data['content']='comment upvoted by:'+form.cleaned_data.get('comment').user.name
-
+            print form.cleaned_data
+            comment_id = int(form.cleaned_data.get('id'))
+            comment = CommentModel.objects.filter(id=comment_id).first()
+            print "no upvote yet"
+            if comment is not None:
+                print"upvoted"
+                comment.upvote_number += 1
+                comment.save()
+                print comment.upvote_number
+                messages.success(request, "Wow!comment Sucessfully upvoted!")
+                return redirect('/feed/')
             else:
-                upvoted.delete()
-                response_data['subject']='downvoted'
-                response_data['content']='comment downvoted by:'+form.cleaned_data.get('comment').user.name
-
+                print"some error"
+                messages.success(request, "some error")
+                return redirect('/feed/')
+        else:
+            messages.warning(request, "Error:comment not be upvoted!try again")
             return redirect('/feed/')
     else:
+        messages.warning(request, "Error:Please fill Login details first!")
         return redirect('/login/')
+
+
+def search_view(request):
+
+    user = check_validation(request)
+    if user:
+        if request.method == "GET":
+            search_form = SearchForm(request.GET)
+            if search_form.is_valid():
+                print 'valid search'
+                username_query = search_form.cleaned_data.get('search_query')
+                print username_query
+                user_with_query = UserModel.objects.filter(username=username_query).first();
+                posts = PostModel.objects.filter(user=user_with_query)
+                return render(request, 'feed.html', {'posts': posts})
+            else:
+                return redirect('/feed/')
+    else:
+        return redirect('/login/')
+

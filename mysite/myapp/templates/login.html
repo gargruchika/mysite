@@ -1,7 +1,12 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <title>Title</title>
     <link href="https://fonts.googleapis.com/css?family=Passion+one" rel="stylesheet">
     <style>
@@ -10,7 +15,9 @@
         padding-top:60px;
         font-family: 'Passion One', cursive;
         font-size:25px;
-        background:aliceblue
+        background-size:cover;
+        background-repeat:no-repeat;
+        background-image:url('{% static "newone.jpeg"%}');
         }
         input{
     width:300px;
@@ -19,7 +26,7 @@
     border-radius:8px;
     }
     .button {
-    background-color: mediumslateblue;
+    background-color: black;
     border: none;
     color: white;
     padding: 15px 32px;
@@ -35,7 +42,12 @@
 </head>
 <body>
 <div class="main">
-     <h1> Login</h1>
+     <h1> Login</h1><br>
+    {% for message in messages %}
+         <div class="alert alert-{{ message.tags }}">
+             {{ message }}
+         </div><br>
+    {% endfor %}
  </div>
 <center>
   <form method="post">

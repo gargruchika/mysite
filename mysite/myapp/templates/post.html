@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,14 +10,26 @@
         font-family: 'Ultra', serif;
         text-align:center;
         font-size:40px;
+        background-image: url('{% static "pic.jpg"%}');
+        background-size:cover;
         }
+        input{
+         width:200px;
+         height:30px;
+         border-radius:5px;
+    }
     </style>
 </head>
 <body>
  <form method="POST" enctype="multipart/form-data"><br>
-      {% csrf_token %}
+   {% csrf_token %}
       {{ form }}
       <input type="submit" class="btn btn-default" value="Add a picture">
-   </form>
+     </form>
+   {% for message in messages %}
+         <div class="alert alert-{{ message.tags }}">
+             {{ message }}
+         </div><br>
+   {% endfor %}
 </body>
 </html>

@@ -1,6 +1,6 @@
 #import files
 from django import forms
-from models import UserModel,login,PostModel,LikeModel,CommentModel,UpvotingModel
+from models import UserModel,login,PostModel,LikeModel,CommentModel
 
 #forms for signup and login
 class SignUpForm(forms.ModelForm):
@@ -26,9 +26,12 @@ class LikeForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
     class Meta:
         model = CommentModel
-        fields = ['comment_text','post']
+        fields = ['comment_text','post','id']
 
-class UpvotingForm(forms.ModelForm):
-    class Meta:
-        model = UpvotingModel
-        fields = ['comment']
+class UpvoteForm(forms.Form):
+    id = forms.IntegerField()
+
+class SearchForm(forms.Form):
+    search_query = forms.CharField();
+
+

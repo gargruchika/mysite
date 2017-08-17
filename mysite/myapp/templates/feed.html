@@ -1,13 +1,17 @@
-
+{% load  static %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <title>title</title>
     <link href="https://fonts.googleapis.com/css?family=Passion+one" rel="stylesheet">
     <style>
-.button {
+.button1 {
   margin-top:40px;
   display: inline-block;
   padding: 15px 25px;
@@ -23,33 +27,64 @@
   box-shadow: 0 9px #999;
 }
 
-.button:hover {background-color: #517fa4}
+.button1:hover {background-color: #517fa4}
 
-.button:active {
-  background-color: #517fa4;
+.button1:active {
+  background-color:#517fa4 ;
   box-shadow: 0 5px #666;
   transform: translateY(4px);
 }
 
+
    body{
    text-align:center;
    font-family: 'Passion One', cursive;
-   }
+   background-image: url('{% static "download.jpg"%}');
+   background-size: cover;
+    }
+
    h1{
    font-size:40px;
    }
+   input{
+    width:250px;
+    height:30px;
+    border-radius:5px;
+    }
+
+
+
+
+
+
 </style>
 </head>
     <h1>INSTAGRAM CLONE</h1>
     <h2>Sell anything online here</h2>
     <p>Find here everything that you need for an online store </p>
+
+    <div class="container">
+
+    <form action="/search/" method="GET">
+    {% csrf_token %}
+    <input type="text" name="search_query" class='' placeholder="Search by name...">
+        <button type="button5" class ="btn btn-basic">Search</button>
+
+    </form>
+     </div>
+
     <form method="post" action="/post/">
         {% csrf_token %}
-        <button class="button">Create Post</button>
+        <button class="button1">Create Post</button>
     </form><br><br>
 
 
-<body>
+<body >
+    {% for message in messages %}
+         <div class="alert alert-{{ message.tags }}">
+             {{ message }}
+         </div><br>
+    {% endfor %}
     {%for post in posts%}
         <h3> Posted by: {{ post.user.username }} </h3>
         <p>[{{ post.created_on }}]</p>
@@ -64,9 +99,9 @@
               {% csrf_token %}
                 <input type="hidden" name="post" value="{{ post.id }}" />
                 {% if post.has_liked %}
-                <input type="submit" class="btn btn-default" value="Unlike">
+                <button type="button4" class ="btn btn-basic">Unlike</button>
                 {% else %}
-                <input type="submit" class="btn btn-default" value="Like">
+                <button type="button2" class ="btn btn-primary">Like</button>
                 {% endif %}
             </form>
         </div>
@@ -77,19 +112,37 @@
                 <input type="hidden" name="post" value="{{ post.id }}" />
                 <input type="text" name="comment_text" id="comment_text" placeholder="Make a comment.." value="{{ comment_text }}">
                 {{ comment_text }}
-                <input type="submit" class="btn-default btn" value="Comment">
+                <button type="button3" class ="btn btn-primary">Comment</button>
             </form>
         </div>
+       <div>
+       {% for comment in post.comments %}
+       <p><b>{{ comment.user.username }} [{{ comment.created_on }}]:</b> {{ comment.comment_text }}</p>
+       <form method="POST" action="/upvote/">
+        {% csrf_token %}
+        <input type="hidden" name="id" value="{{ comment.id }}" />
+        <span>
+         Upvotes: {{comment.upvote_number}}
+        </span>
 
-        <div>
-            {% for comment in post.comments %}
-                <p><b>{{ comment.user.username }} [{{ comment.created_on }}]:</b> {{ comment.comment_text }}</p>
-            {% endfor %}
-        </div>
+        <button type="button2" class ="btn btn-primary">upvote</button>
+        </form>
+
+
+        {% endfor %}
+       </div>
     {% endfor %}
-    <br>
-<form action="/logout/" method="get">
-            <button class="button">Log Out</button>
-    </form>
+
+
+    <form action="/logout/" method="get">
+            <button class="button1">Log Out</button>
+    </form><br>
+
+
+
 </body>
 </html>
+
+
+
+
