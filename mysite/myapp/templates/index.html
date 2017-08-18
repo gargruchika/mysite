@@ -8,7 +8,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <title>Instagram Clone</title>
-    <link href="https://fonts.googleapis.com/css?family=Passion+one" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Passion+one|Shrikhand|Ultra|Fugaz+One" rel="stylesheet">
 
     <style>
     body{
@@ -74,6 +74,17 @@ margin-top:-60px;
 margin-right:40px;
 font-size:40px;
 }
+#nav h1{
+margin-left:20px;
+font-family: 'Ultra', serif;
+}
+#header h1{
+padding-top:20px;
+font-family: 'Shrikhand', cursive;
+}
+#header h4{
+font-family: 'Fugaz One', cursive;
+}
 #header{
 text-align: center;
   background-image:url('{% static "im3.jpeg"%}');
@@ -91,6 +102,11 @@ text-align: center;
   }
 #content  h2{
 font-size:30px;
+font-family: 'Shrikhand', cursive;
+
+}
+#content h2{
+font-family: 'Shrikhand', cursive;
 }
 MESSAGE_TAGS={messages.ERROR:'danger'}
 #last{
@@ -98,6 +114,13 @@ MESSAGE_TAGS={messages.ERROR:'danger'}
   text-align: center;
   height:150px;
   width:1400px;
+}
+#last h2{
+font-family: 'Shrikhand', cursive;
+}
+#part h1{
+padding-top:20px;
+font-family: 'Shrikhand', cursive;
 
 }
 
@@ -107,11 +130,13 @@ MESSAGE_TAGS={messages.ERROR:'danger'}
 <body>
  <div class="main">
      <section id="nav">
-     <h1>Instagram Clone</h1><a href="login/">Login</a><hr>
+     <h1>Instagram Clone</h1><a href="login/">Login</a>
+         <a href="#part" style="margin-right:200px;">Signup</a>
+         <hr>
      </section>
      <center>
          <section id="header">
-     <h2>Smart P2P Marketplace</h2>
+     <h1>Smart P2P Marketplace</h1>
 
              <h4>This is a fully hosted ecommerce website solution that will help you sell online. It only takes a few minutes to open a store and start selling to customers around the world.Register your account an start selling.</h4>
          <img src="http://i.imgur.com/eHTkKHd.jpg"  />
@@ -120,7 +145,7 @@ MESSAGE_TAGS={messages.ERROR:'danger'}
  </div>
  <section id ="content">
      <center>
-       <h1>We're here to help, 24 hours a day, 7 days a week</h1>
+       <h2>We're here to help, 24 hours a day, 7 days a week</h2>
          <img src ="http://i.imgur.com/dUuESgU.jpg"/><hr>
          <h2>India’s Fastest Growing Ecommerce Solution</h2>
           <h3>40 payment providers including PayU and COD.<br>
@@ -135,7 +160,7 @@ MESSAGE_TAGS={messages.ERROR:'danger'}
  </section>
  <center>
      <section id ='part'>
-         <h1>Sign Up</h1>
+         <h1>Sign Up</h1><br>
          {% for message in messages %}
          <div class="alert alert-{{ message.tags }}">
              {{ message }}
@@ -172,7 +197,7 @@ MESSAGE_TAGS={messages.ERROR:'danger'}
 
         <section id="last">
           <footer>
-                 <h3>Contact with us</h3>
+                 <h2>Contact with us...</h2>
               <img src="http://i.imgur.com/aAcSKBI.jpg"/>
 
 

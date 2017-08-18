@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.conf.urls.static import static
 from myapp.views import signup_view, feed_view ,login_view,post_view,like_view,comment_view,logout_view,upvote_view,search_view
 
-
+#urls for different views/pages
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url('search/',search_view),

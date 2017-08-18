@@ -21,7 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '4l)$lz%(1$c3tn-0snbi#g87vb7*eucy8cbt@=uohsuf2=yt-!'
-
+SENDGRID_API_KEY ='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'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

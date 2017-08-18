@@ -121,14 +121,11 @@
        <form method="POST" action="/upvote/">
         {% csrf_token %}
         <input type="hidden" name="id" value="{{ comment.id }}" />
-        <span>
          Upvotes: {{comment.upvote_number}}
-        </span>
+
 
         <button type="button2" class ="btn btn-primary">upvote</button>
         </form>
-
-
         {% endfor %}
        </div>
     {% endfor %}

@@ -12,6 +12,14 @@ from django.utils import timezone
 from django.db import IntegrityError
 from django.contrib.auth import logout
 import os
+from clarifai.rest import Image as CImage
+from clarifai.rest import ClarifaiApp
+app = ClarifaiApp(api_key='cc38356c59fe4e11bcf1f7a9decea234')
+model = app.models.get('apparel')
+image = CImage(url='https://samples.clarifai.com/apparel.jpeg')
+model.predict([image])
+imgs=app.inputs.search_by_predicted_concepts(concept='apparel')
+print imgs
 import sendgrid
 from sendgrid.helpers.mail import *
 from django.contrib import messages
@@ -19,7 +27,7 @@ from django.contrib.auth.hashers import make_password,check_password
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CLIENT_ID =  '54ceade8d449315'
 CLIENT_SECRET = 'a2f439835e340c444f786a6c99fef14bded5e177'
-
+SENDGRID_API_KEY ='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'
 
 # Create your views here.
 def signup_view(request):
@@ -35,7 +43,7 @@ def signup_view(request):
             if len(username)>=4 and len(password)>=3:
               user = UserModel(name=name, password=make_password(password), email=email, username=username)
               user.save()
-              sg = sendgrid.SendGridAPIClient(apikey=SENDGRID_API_KEY)
+              sg = sendgrid.SendGridAPIClient(apikey=SENDGRID_API_KEY)                                #email send for verification.
               from_email = Email("ruchikagarg764@example.com.")
               to_email = Email(email)
               subject = "Successfully signed up."
@@ -82,6 +90,7 @@ def login_view(request):
     response_data['form'] = form
     return render(request,'login.html', response_data)
 
+#post view for posts
 def post_view(request):
     user = check_validation(request)
 
@@ -110,7 +119,7 @@ def post_view(request):
         return redirect('/login/')
 
 
-
+#feed view to show the feed/result
 def feed_view(request):
     user = check_validation(request)
     if user:
@@ -125,6 +134,7 @@ def feed_view(request):
     else:
         return redirect('/login/')
 
+#like view for liking posts by user
 def like_view(request):
     user = check_validation(request)
     if user and request.method == 'POST':
@@ -135,7 +145,7 @@ def like_view(request):
             if not existing_like:
                 LikeModel.objects.create(post_id=post_id,user=user)
                 messages.warning(request, "Like should be created successfully.")
-                postget=PostModel.objects.filter(id=post_id).first()
+                postget=PostModel.objects.filter(id=post_id).first()                         #email send for verification
                 userid=postget.user_id
                 user=UserModel.objects.filter(id=userid).first()
                 email=user.email
@@ -152,6 +162,7 @@ def like_view(request):
     else:
         return redirect('/login/')
 
+#comment view for comments on post
 def comment_view(request):
     user = check_validation(request)
     if user and request.method == 'POST':
@@ -162,7 +173,7 @@ def comment_view(request):
             comment = CommentModel.objects.create(user=user,post_id=post_id,comment_text=comment_text)
             comment.save()
             messages.warning(request, "comment should be created successfully.")
-            postget = PostModel.objects.filter(id=post_id).first()
+            postget = PostModel.objects.filter(id=post_id).first()                                     #email send for verification
             userid = postget.user_id
             user = UserModel.objects.filter(id=userid).first()
             email = user.email
@@ -191,6 +202,7 @@ def check_validation(request):
     else:
         return None
 
+#for logout the current account
 def logout_view(request):
     user = check_validation(request)
     if user is not None:
@@ -199,26 +211,27 @@ def logout_view(request):
             new_session.delete()
     return render(request,'logout.html')
 
+#for upvoting the comments
 def upvote_view(request):
     user = check_validation(request)
     comment =None
-    print"upvote view"
+    print "upvote view"
     if user and request.method == 'POST':
         form = UpvoteForm(request.POST)
         if form.is_valid():
             print form.cleaned_data
             comment_id = int(form.cleaned_data.get('id'))
             comment = CommentModel.objects.filter(id=comment_id).first()
-            print "no upvote yet"
+            print "Not upvoted yet"
             if comment is not None:
-                print"upvoted"
+                print "Upvoted"
                 comment.upvote_number += 1
                 comment.save()
                 print comment.upvote_number
                 messages.success(request, "Wow!comment Sucessfully upvoted!")
                 return redirect('/feed/')
             else:
-                print"some error"
+                print "some error"
                 messages.success(request, "some error")
                 return redirect('/feed/')
         else:
@@ -228,9 +241,8 @@ def upvote_view(request):
         messages.warning(request, "Error:Please fill Login details first!")
         return redirect('/login/')
 
-
+#search view for searching the post particular by user name
 def search_view(request):
-
     user = check_validation(request)
     if user:
         if request.method == "GET":
@@ -247,3 +259,11 @@ def search_view(request):
     else:
         return redirect('/login/')
 
+#concept of clarifai
+def get_relevant_tags(image_url):
+    response_data = app.tag_urls([image_url])
+    tag_urls = []
+    for concept in response_data['outputs'][0]['data']['concepts']:
+        tag_urls.append(concept['name'])
+
+    return tag_urls

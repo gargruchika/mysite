@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.db import models
 import uuid
 from django.db import IntegrityError
+
 #create usermodel to form a table with the help of django
 class UserModel(models.Model):
     email = models.EmailField()
@@ -34,6 +35,7 @@ class SessionToken(models.Model):
     def create_token(self):
         self.session_token = uuid.uuid4()
 
+#create post model
 class PostModel(models.Model):
     user = models.ForeignKey(UserModel)
     image= models.FileField(upload_to='user_images')
@@ -43,7 +45,7 @@ class PostModel(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
-    @property
+    @property                                                                         #property for conting likes
     def like_count(self):
         return len(LikeModel.objects.filter(post=self))
 
@@ -51,12 +53,15 @@ class PostModel(models.Model):
     def comments(self):
         return CommentModel.objects.filter(post=self).order_by('-created_on')
 
+#like model for likes
 class LikeModel(models.Model):
     user = models.ForeignKey(UserModel)
     post = models.ForeignKey(PostModel)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
+
+#comment model for comments
 class CommentModel(models.Model):
     user = models.ForeignKey(UserModel)
     post = models.ForeignKey(PostModel)
